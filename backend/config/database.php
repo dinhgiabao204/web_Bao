@@ -13,7 +13,7 @@ class Database {
     private $username = 'root';
     private $password = ''; 
     private $port = '3307'; // <--- Đây là cổng MySQL mặc định
-    private $conn;
+    public $conn;
 
     // Hàm kết nối
     public function connect() {

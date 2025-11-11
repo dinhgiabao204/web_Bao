@@ -76,39 +76,56 @@ function renderPostsTable(posts) {
   });
 }
 
-// 3. GẮN SỰ KIỆN
+// 3. GẮN SỰ KIỆN MODAL
 function attachModalEvents() {
+  const btnAdd = document.getElementById("btn-add-new-post");
   const modal = document.getElementById("post-modal");
-  const addBtn = document.getElementById("btn-add-new-post");
-  const closeBtn = document.getElementById("modal-close-btn");
-  if (!modal || !addBtn || !closeBtn) return;
 
-  addBtn.addEventListener("click", () => {
-    resetForm();
-    document.getElementById("modal-title").textContent = "Thêm bài viết mới";
-    modal.style.display = "flex";
-  });
-  closeBtn.addEventListener("click", () => (modal.style.display = "none"));
+  // ĐÃ SỬA: Đổi từ "btn-close-modal" thành "modal-close-btn"
+  const btnClose = document.getElementById("modal-close-btn");
+
+  if (btnAdd) {
+    btnAdd.addEventListener("click", () => {
+      resetForm();
+      document.getElementById("modal-title").textContent = "Thêm bài viết mới";
+      document.getElementById("post_id").value = "";
+      modal.style.display = "block";
+    });
+  }
+
+  if (btnClose) {
+    btnClose.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+  }
+
+  // Đóng modal khi click bên ngoài
   window.addEventListener("click", (e) => {
-    if (e.target == modal) modal.style.display = "none";
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
   });
 
-  document
-    .getElementById("post_image")
-    .addEventListener("change", function (e) {
-      const preview = document.getElementById("image-preview");
-      if (this.files && this.files[0]) {
+  // Preview ảnh khi chọn file
+  // ĐÃ SỬA: Đổi từ "post-image" thành "post_image" (phù hợp với HTML)
+  const imageInput = document.getElementById("post_image");
+  const imagePreview = document.getElementById("image-preview");
+
+  if (imageInput && imagePreview) {
+    imageInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          preview.src = e.target.result;
-          preview.style.display = "block";
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = "block";
         };
-        reader.readAsDataURL(this.files[0]);
+        reader.readAsDataURL(file);
       } else {
-        preview.style.display = "none";
-        preview.src = "";
+        imagePreview.style.display = "none";
       }
     });
+  }
 }
 
 function attachTableEvents() {
@@ -188,52 +205,54 @@ function attachFormSubmitEvent() {
 }
 
 // 4. HÀM XỬ LÝ LOGIC (Sửa/Xóa)
+
+// Hàm này được gọi khi nhấn nút "Sửa" trên một hàng của bảng
 async function handleEditPost(postId) {
   const messageP = document.getElementById("post-form-message");
-  messageP.textContent = "Đang tải dữ liệu...";
+  messageP.textContent = "Đang tải dữ liệu bài viết...";
   messageP.style.color = "blue";
 
-  resetForm();
+  resetForm(); // Xóa dữ liệu cũ trên form
   document.getElementById(
     "modal-title"
   ).textContent = `Sửa bài viết (ID: ${postId})`;
   document.getElementById("post-modal").style.display = "flex";
 
   try {
+    // SỬA LẠI ĐÂY: Dùng action=detail thay vì admin_detail
     const response = await apiFetch(
-      `${API_URL}/posts.php?action=admin_detail&id=${postId}`
+      `${API_URL}/posts.php?action=detail&id=${postId}`
     );
     const result = await response.json();
 
     if (result.status === "success" && result.data) {
       const post = result.data;
+      // Điền dữ liệu vào form
       document.getElementById("post_id").value = post.id;
       document.getElementById("post_title").value = post.title;
-      document.getElementById("post_slug").value = post.slug;
-      document.getElementById("post_excerpt").value = post.excerpt;
       document.getElementById("post_content").value = post.content;
+      document.getElementById("post_excerpt").value = post.excerpt;
       document.getElementById("post_status").value = post.status;
 
-      const preview = document.getElementById("image-preview");
+      // Hiển thị ảnh cũ nếu có
+      const imagePreview = document.getElementById("image-preview");
       if (post.image) {
-        let imageSrc = post.image;
-        if (typeof imageSrc === "string" && !imageSrc.startsWith("posts/")) {
-          imageSrc = "posts/" + imageSrc;
-        }
-        preview.src = `../../uploads/${imageSrc}`;
-        preview.style.display = "block";
+        // Giả sử đường dẫn ảnh là 'uploads/posts/ten_anh.jpg'
+        imagePreview.innerHTML = `<img src="/nhathuocgb/uploads/${post.image}" alt="Ảnh cũ" style="max-width: 100px; margin-top: 10px;">`;
       } else {
-        preview.style.display = "none";
-        preview.src = "";
+        imagePreview.innerHTML = "";
       }
-      messageP.textContent = "";
+
+      messageP.textContent = ""; // Xóa thông báo tải
     } else {
-      messageP.textContent = `Lỗi: ${result.message}`;
+      messageP.textContent = `Lỗi: ${
+        result.message || "Không thể tải dữ liệu."
+      }`;
       messageP.style.color = "red";
     }
   } catch (error) {
-    console.error("Lỗi tải chi tiết bài viết:", error);
-    messageP.textContent = "Lỗi kết nối khi tải chi tiết bài viết.";
+    console.error("Lỗi khi tải chi tiết bài viết:", error);
+    messageP.textContent = "Lỗi kết nối hoặc API endpoint không tồn tại.";
     messageP.style.color = "red";
   }
 }
@@ -260,12 +279,22 @@ async function handleDeletePost(postId) {
 // Hàm reset form modal
 function resetForm() {
   const form = document.getElementById("post-form");
-  form.reset();
+  if (form) {
+    form.reset();
+  }
   document.getElementById("post_id").value = "";
   document.getElementById("post_status").value = "published";
-  document.getElementById("image-preview").style.display = "none";
-  document.getElementById("image-preview").src = "";
-  document.getElementById("post-form-message").textContent = "";
+
+  const preview = document.getElementById("image-preview");
+  if (preview) {
+    preview.style.display = "none";
+    preview.src = "";
+  }
+
+  const message = document.getElementById("post-form-message");
+  if (message) {
+    message.textContent = "";
+  }
 }
 
 // Gọi hàm init chính

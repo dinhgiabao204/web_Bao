@@ -83,77 +83,117 @@
         </table>
       </div>
 
-      <div id="post-modal" class="admin-modal" style="display: none">
+      <!-- Modal thêm/sửa bài viết -->
+      <div id="post-modal" class="modal" style="display: none">
         <div class="modal-content">
-          <span class="modal-close" id="modal-close-btn">&times;</span>
-          <h2 id="modal-title">Thêm bài viết mới</h2>
-          <form id="post-form" enctype="multipart/form-data">
-            <input type="hidden" id="post_id" name="id" />
+          <div class="modal-header">
+            <h2 id="modal-title">Thêm bài viết mới</h2>
+            <button type="button" id="modal-close-btn" class="modal-close-btn">
+              &times;
+            </button>
+          </div>
 
-            <div class="form-group">
-              <label for="post_title"
-                >Tiêu đề <span class="required">*</span></label
-              >
-              <input type="text" id="post_title" name="title" required />
-            </div>
-            <div class="form-group">
-              <label for="post_slug"
-                >Slug (URL) <span class="required">*</span></label
-              >
-              <input type="text" id="post_slug" name="slug" required />
-            </div>
+          <div class="modal-body">
+            <form id="post-form">
+              <input type="hidden" id="post_id" name="id" />
 
-            <div class="form-group">
-              <label for="post_excerpt">Mô tả ngắn (Excerpt)</label>
-              <textarea id="post_excerpt" name="excerpt" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="post_content"
-                >Nội dung <span class="required">*</span></label
-              >
-              <textarea
-                id="post_content"
-                name="content"
-                rows="10"
-                required
-              ></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="post_image"
-                >Ảnh đại diện (Để trống nếu không muốn đổi)</label
-              >
-              <input
-                type="file"
-                id="post_image"
-                name="image"
-                accept="image/png, image/jpeg, image/webp, image/avif, image/gif"
-              />
-              <div id="image-preview-container">
-                <img
-                  id="image-preview"
-                  src=""
-                  alt="Xem trước ảnh"
-                  style="display: none"
+              <div class="form-group">
+                <label for="post_title"
+                  >Tiêu đề <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="post_title"
+                  name="title"
+                  required
+                  placeholder="Nhập tiêu đề bài viết"
                 />
               </div>
-            </div>
 
-            <div class="form-group">
-              <label for="post_status"
-                >Trạng thái <span class="required">*</span></label
-              >
-              <select id="post_status" name="status" required>
-                <option value="published" selected>Published (Hiển thị)</option>
-                <option value="draft">Draft (Bản nháp)</option>
-              </select>
-            </div>
+              <div class="form-group">
+                <label for="post_slug"
+                  >Slug (URL) <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="post_slug"
+                  name="slug"
+                  placeholder="Tự động tạo từ tiêu đề"
+                />
+                <small class="form-text">
+                  Để trống để tự động tạo từ tiêu đề
+                </small>
+              </div>
 
-            <p id="post-form-message" class="form-message"></p>
-            <button type="submit" class="btn btn-primary btn-full">
-              Lưu bài viết
-            </button>
-          </form>
+              <div class="form-group">
+                <label for="post_excerpt">Mô tả ngắn (Excerpt)</label>
+                <textarea
+                  id="post_excerpt"
+                  name="excerpt"
+                  rows="3"
+                  placeholder="Mô tả ngắn cho bài viết (tùy chọn)"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="post_content"
+                  >Nội dung <span class="required">*</span></label
+                >
+                <textarea
+                  id="post_content"
+                  name="content"
+                  rows="8"
+                  required
+                  placeholder="Nhập nội dung bài viết"
+                ></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="post_image">Ảnh bài viết</label>
+                  <input
+                    type="file"
+                    id="post_image"
+                    name="image"
+                    accept="image/*"
+                  />
+                  <img
+                    id="image-preview"
+                    src=""
+                    alt="Preview"
+                    style="
+                      display: none;
+                      max-width: 100%;
+                      margin-top: 10px;
+                      border-radius: 8px;
+                    "
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="post_status">Trạng thái</label>
+                  <select id="post_status" name="status">
+                    <option value="published">Hiển thị</option>
+                    <option value="draft">Bản nháp</option>
+                  </select>
+                </div>
+              </div>
+
+              <p id="post-form-message" style="margin-top: 10px"></p>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save"></i> Lưu bài viết
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  onclick="document.getElementById('post-modal').style.display='none'"
+                >
+                  <i class="fas fa-times"></i> Hủy
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </main>

@@ -137,6 +137,33 @@ try {
             else { json_response(404, ['status' => 'error', 'message' => 'Không tìm thấy sản phẩm.']); }
             break;
 
+        // --- ADMIN: LẤY CHI TIẾT SẢN PHẨM (MỚI) ---
+        case 'admin_detail':
+            if ($method == 'GET') {
+                check_admin(); // BẢO VỆ
+                if (empty($_GET['id'])) {
+                    json_response(400, ['status' => 'error', 'message' => 'Thiếu ID sản phẩm.']);
+                }
+                $id = (int)$_GET['id'];
+                // Truy vấn không kiểm tra status
+                $query = "SELECT p.*, c.name as category_name 
+                          FROM products p
+                          LEFT JOIN categories c ON p.category_id = c.id
+                          WHERE p.id = :id";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([':id' => $id]);
+                $product = $stmt->fetch();
+                
+                if ($product) {
+                    json_response(200, ['status' => 'success', 'data' => $product]);
+                } else {
+                    json_response(404, ['status' => 'error', 'message' => 'Không tìm thấy sản phẩm với ID này.']);
+                }
+            } else {
+                json_response(405, ['status' => 'error', 'message' => 'Method Not Allowed']);
+            }
+            break;
+
         // --- ADMIN: LẤY TẤT CẢ SẢN PHẨM ---
         case 'admin_list':
             if ($method == 'GET') {

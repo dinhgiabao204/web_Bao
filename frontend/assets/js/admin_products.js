@@ -247,7 +247,7 @@ async function handleEditProduct(productId) {
 
   try {
     const response = await apiFetch(
-      `${API_URL}/products.php?action=detail&id=${productId}`
+      `${API_URL}/products.php?action=admin_detail&id=${productId}`
     );
     const result = await response.json();
 

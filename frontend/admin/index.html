@@ -51,22 +51,227 @@
         </li>
       </ul>
       <div class="admin-user-info" id="admin-sidebar-user">
-        <p>Đang tải...</p>
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <p class="user-name"><strong>Administrator</strong></p>
+          <p class="user-email">admin@gmail.com</p>
+          <a href="login.html" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+          </a>
+        </div>
       </div>
     </aside>
 
     <main class="admin-main-content" id="admin-dashboard">
       <h1>Bảng điều khiển</h1>
-      <p>Chào mừng đến với trang quản trị Nhà Thuốc GB.</p>
+      <p>Thống kê tổng quan về hoạt động website</p>
+
+      <!-- Thống kê tổng quan -->
+      <div class="dashboard-stats" id="dashboard-stats">
+        <div class="loading">Đang tải thống kê...</div>
+      </div>
+
+      <!-- Chi tiết thống kê -->
+      <div class="dashboard-details">
+        <!-- Doanh thu -->
+        <div class="dashboard-card">
+          <h3><i class="fas fa-chart-bar"></i> Doanh thu 6 tháng gần nhất</h3>
+          <div id="revenue-chart">
+            <div class="loading">Đang tải...</div>
+          </div>
+        </div>
+
+        <!-- Sản phẩm bán chạy -->
+        <div class="dashboard-card">
+          <h3><i class="fas fa-fire"></i> Top 5 sản phẩm bán chạy</h3>
+          <div id="top-products">
+            <div class="loading">Đang tải...</div>
+          </div>
+        </div>
+
+        <!-- Đơn hàng theo trạng thái -->
+        <div class="dashboard-card">
+          <h3><i class="fas fa-list"></i> Trạng thái đơn hàng</h3>
+          <div id="orders-status">
+            <div class="loading">Đang tải...</div>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/admin_common.js"></script>
+    <script src="../assets/js/config.js"></script>
     <script>
-      // JS riêng cho Dashboard
-      document.addEventListener("DOMContentLoaded", () => {
-        // Hàm check login đã được gọi trong admin_common.js
+      // Hàm apiFetch
+      async function apiFetch(url, options = {}) {
+        options.credentials = "include";
+        return fetch(url, options);
+      }
+
+      // Load dashboard
+      document.addEventListener("DOMContentLoaded", async () => {
+        setTimeout(async () => {
+          await loadDashboard();
+        }, 500);
       });
+
+      // Hàm load dashboard
+      async function loadDashboard() {
+        try {
+          const response = await apiFetch(`${API_URL}/dashboard.php`);
+          const result = await response.json();
+
+          console.log("Dashboard data:", result);
+
+          if (result.status === "success") {
+            showDashboardStats(result.data);
+            showRevenueChart(result.data.revenueByMonth);
+            showTopProducts(result.data.topProducts);
+            showOrdersStatus(result.data.ordersByStatus);
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (error) {
+          console.error("Lỗi tải dashboard:", error);
+          document.getElementById("dashboard-stats").innerHTML =
+            '<p style="color: red; padding: 20px;">Lỗi tải dữ liệu: ' +
+            error.message +
+            "</p>";
+        }
+      }
+
+      // Hiển thị thống kê tổng quan
+      function showDashboardStats(data) {
+        const container = document.getElementById("dashboard-stats");
+        container.innerHTML = `
+          <div class="stat-box">
+            <i class="fas fa-pills"></i>
+            <div>
+              <h2>${data.totalProducts || 0}</h2>
+              <p>Sản phẩm</p>
+            </div>
+          </div>
+          <div class="stat-box">
+            <i class="fas fa-shopping-cart"></i>
+            <div>
+              <h2>${data.totalOrders || 0}</h2>
+              <p>Đơn hàng</p>
+            </div>
+          </div>
+          <div class="stat-box">
+            <i class="fas fa-users"></i>
+            <div>
+              <h2>${data.totalUsers || 0}</h2>
+              <p>Khách hàng</p>
+            </div>
+          </div>
+          <div class="stat-box">
+            <i class="fas fa-dollar-sign"></i>
+            <div>
+              <h2>${formatMoney(data.totalRevenue || 0)}</h2>
+              <p>Doanh thu</p>
+            </div>
+          </div>
+        `;
+      }
+
+      // Hiển thị biểu đồ doanh thu
+      function showRevenueChart(data) {
+        const container = document.getElementById("revenue-chart");
+        if (!data || data.length === 0) {
+          container.innerHTML = "<p>Chưa có dữ liệu doanh thu</p>";
+          return;
+        }
+
+        const max = Math.max(...data.map((x) => parseFloat(x.revenue)));
+        let html = '<div class="chart-container">';
+        data.forEach((item) => {
+          const percent = max > 0 ? (parseFloat(item.revenue) / max) * 100 : 0;
+          html += `
+            <div class="chart-row">
+              <span class="month">${item.month}</span>
+              <div class="bar-bg">
+                <div class="bar" style="width: ${percent}%"></div>
+              </div>
+              <span class="value">${formatMoney(item.revenue)}</span>
+            </div>
+          `;
+        });
+        html += "</div>";
+        container.innerHTML = html;
+      }
+
+      // Hiển thị sản phẩm bán chạy - BỎ ẢNH
+      function showTopProducts(data) {
+        const container = document.getElementById("top-products");
+        if (!data || data.length === 0) {
+          container.innerHTML = "<p>Chưa có dữ liệu</p>";
+          return;
+        }
+
+        let html = '<ul class="product-list">';
+        data.forEach((item, i) => {
+          html += `
+            <li>
+              <span class="rank">#${i + 1}</span>
+              <div class="product-info">
+                <strong>${item.name}</strong>
+                <small>Đã bán: ${item.total_sold} sản phẩm</small>
+              </div>
+            </li>
+          `;
+        });
+        html += "</ul>";
+        container.innerHTML = html;
+      }
+
+      // Hiển thị trạng thái đơn hàng
+      function showOrdersStatus(data) {
+        const container = document.getElementById("orders-status");
+        if (!data || data.length === 0) {
+          container.innerHTML = "<p>Chưa có đơn hàng</p>";
+          return;
+        }
+
+        const statusNames = {
+          pending: "Chờ xử lý",
+          confirmed: "Đã xác nhận",
+          shipping: "Đang giao",
+          completed: "Hoàn thành",
+          cancelled: "Đã hủy",
+        };
+
+        const statusColors = {
+          pending: "#ffa500",
+          confirmed: "#4CAF50",
+          shipping: "#2196F3",
+          completed: "#4CAF50",
+          cancelled: "#f44336",
+        };
+
+        let html = '<ul class="status-list">';
+        data.forEach((item) => {
+          const color = statusColors[item.status] || "#999";
+          html += `
+            <li>
+              <span class="status-dot" style="background: ${color}"></span>
+              <span>${statusNames[item.status] || item.status}</span>
+              <strong>${item.count}</strong>
+            </li>
+          `;
+        });
+        html += "</ul>";
+        container.innerHTML = html;
+      }
+
+      // Format tiền
+      function formatMoney(amount) {
+        return new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(amount);
+      }
     </script>
   </body>
 </html>
