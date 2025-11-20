@@ -9,10 +9,10 @@ if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
 class Database {
     // Thông số kết nối XAMPP
     private $host = 'localhost';
-    private $db_name = 'nhathuocgb'; 
-    private $username = 'root';
-    private $password = ''; 
-    private $port = '3307'; // <--- Đây là cổng MySQL mặc định
+    private $db_name = 'sql_nhom50_itimi'; 
+    private $username = 'sql_nhom50_itimi';
+    private $password = '03a894cb183488'; 
+    private $port = '3306'; // <--- Đây là cổng MySQL mặc định
     public $conn;
 
     // Hàm kết nối

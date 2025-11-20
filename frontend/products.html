@@ -17,6 +17,20 @@
       <div class="container">
         <h2 id="page-title">Tất cả Sản phẩm</h2>
 
+        <!-- THÊM Ô TÌM KIẾM -->
+        <div class="search-filter-bar" style="margin-bottom: 20px">
+          <div class="search-box" style="max-width: 500px">
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              id="product-search-input"
+            />
+            <button type="button" id="product-search-button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+
         <div id="products-list-grid" class="product-grid">
           <p>Đang tải sản phẩm...</p>
         </div>
@@ -31,39 +45,97 @@
       async function initProductsPage() {
         console.log("Đang khởi tạo trang sản phẩm...");
         const urlParams = new URLSearchParams(window.location.search);
-        const categoryId = urlParams.get("category_id"); // Lấy category_id từ URL
+        const categoryId = urlParams.get("category_id");
+        const searchKeyword = urlParams.get("search"); // ← THÊM DÒNG NÀY
 
-        await loadProducts(categoryId); // Tải sản phẩm (có thể theo category)
-        await loadCategoriesDropdown(); // Tải danh mục vào dropdown header
-        checkAuthStatus(); // Kiểm tra đăng nhập (để nút header đúng)
+        await loadProducts(categoryId, searchKeyword); // ← SỬA DÒNG NÀY
+        await loadCategoriesDropdown();
+        checkAuthStatus();
+        attachProductSearchEvents(); // ← THÊM DÒNG NÀY
       }
 
-      // Hàm gọi API lấy sản phẩm (có thể lọc theo category)
-      async function loadProducts(categoryId = null) {
+      // ========== THÊM HÀM XỬ LÝ TÌM KIẾM ==========
+      function attachProductSearchEvents() {
+        const searchInput = document.getElementById("product-search-input");
+        const searchButton = document.getElementById("product-search-button");
+
+        if (!searchInput || !searchButton) return;
+
+        // Điền sẵn từ khóa nếu có trong URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchKeyword = urlParams.get("search");
+        if (searchKeyword) {
+          searchInput.value = decodeURIComponent(searchKeyword);
+        }
+
+        // Xử lý click nút
+        searchButton.addEventListener("click", handleProductSearch);
+
+        // Xử lý nhấn Enter
+        searchInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleProductSearch();
+          }
+        });
+      }
+
+      function handleProductSearch() {
+        const searchInput = document.getElementById("product-search-input");
+        const keyword = searchInput.value.trim();
+
+        if (!keyword) {
+          // Nếu xóa từ khóa, hiển thị lại tất cả sản phẩm
+          window.location.href = "products.html";
+          return;
+        }
+
+        // Reload trang với query string mới
+        window.location.href = `products.html?search=${encodeURIComponent(
+          keyword
+        )}`;
+      }
+
+      // ========== SỬA HÀM loadProducts ==========
+      async function loadProducts(categoryId = null, searchKeyword = null) {
         const grid = document.getElementById("products-list-grid");
         const pageTitle = document.getElementById("page-title");
-        let apiUrl = `${API_URL}/products.php?action=list`; // URL mặc định
+        let apiUrl = `${API_URL}/products.php?action=list`;
 
+        // XỬ LÝ FILTER THEO CATEGORY
         if (categoryId) {
-          apiUrl += `&category_id=${categoryId}`; // Thêm filter nếu có categoryId
-          pageTitle.textContent = "Đang tải tên danh mục..."; // Tạm thời
+          apiUrl += `&category_id=${categoryId}`;
+          pageTitle.textContent = "Đang tải...";
+        }
+
+        // XỬ LÝ TÌM KIẾM
+        if (searchKeyword) {
+          apiUrl += `&search=${encodeURIComponent(searchKeyword)}`;
+          pageTitle.textContent = `Kết quả tìm kiếm: "${decodeURIComponent(
+            searchKeyword
+          )}"`;
         }
 
         if (!grid) return;
+
         try {
-          const response = await apiFetch(apiUrl); // Dùng apiFetch
+          const response = await apiFetch(apiUrl);
           const result = await response.json();
 
           if (result.status === "success") {
             renderProducts(result.data, grid);
-            // Cập nhật lại title nếu lọc theo category
+
+            // Cập nhật title
             if (categoryId && result.data.length > 0) {
-              const categoryName = result.data[0].category_name; // Lấy tên từ sản phẩm đầu tiên
-              pageTitle.textContent = `Danh mục: ${categoryName}`;
+              pageTitle.textContent = `Danh mục: ${result.data[0].category_name}`;
             } else if (categoryId) {
               pageTitle.textContent = "Danh mục không tìm thấy";
-            } else {
-              pageTitle.textContent = "Tất cả Sản phẩm"; // Đặt lại title mặc định nếu không lọc
+            } else if (searchKeyword && result.data.length === 0) {
+              pageTitle.textContent = `Không tìm thấy kết quả cho: "${decodeURIComponent(
+                searchKeyword
+              )}"`;
+            } else if (!searchKeyword && !categoryId) {
+              pageTitle.textContent = "Tất cả Sản phẩm";
             }
           } else {
             grid.innerHTML = `<p class="error-message">Lỗi: ${result.message}</p>`;
@@ -77,7 +149,7 @@
       // Hàm render sản phẩm (Bản sửa lỗi ảnh)
       function renderProducts(products, gridElement) {
         gridElement.innerHTML = "";
-        if (products.length === 0) {
+        if (!products || products.length === 0) {
           gridElement.innerHTML =
             '<p style="text-align: center;">Không tìm thấy sản phẩm nào.</p>';
           return;
@@ -91,10 +163,9 @@
           if (product.sale_price && product.sale_price < product.price) {
             priceHtml = `<span class="price">${formatCurrency(
               product.sale_price
-            )}</span>
-                                 <span class="price sale">${formatCurrency(
-                                   product.price
-                                 )}</span>`;
+            )}</span><span class="price sale">${formatCurrency(
+              product.price
+            )}</span>`;
           }
 
           let imagePath = product.image;
@@ -110,17 +181,22 @@
           const imageSrc = `../uploads/${imagePath}`;
 
           productCard.innerHTML = `
-                      <a href="product-detail.html?slug=${product.slug}">
-                           <img src="${imageSrc}" alt="${product.name}" onerror="this.onerror=null; this.src='../uploads/placeholder.jpg'; this.style.objectFit='contain';"> </a>
-                      <h3><a href="product-detail.html?slug=${product.slug}">${product.name}</a></h3>
-                      <p class="category-name">${product.category_name}</p>
-                      <div class="price-container">${priceHtml}</div>
-                      <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}" data-product-name="${product.name}">Thêm vào giỏ</button>
-                      `;
+            <a href="product-detail.html?slug=${product.slug}">
+              <img src="${imageSrc}" alt="${
+            product.name
+          }" onerror="this.onerror=null; this.src='../uploads/placeholder.jpg'; this.style.objectFit='contain';">
+            </a>
+            <h3><a href="product-detail.html?slug=${product.slug}">${
+            product.name
+          }</a></h3>
+            <p class="category-name">${product.category_name || ""}</p>
+            <div class="price-container">${priceHtml}</div>
+            <button class="btn btn-primary add-to-cart-btn" data-product-id="${
+              product.id
+            }" data-product-name="${product.name}">Thêm vào giỏ</button>
+          `;
           gridElement.appendChild(productCard);
         });
-
-        // *** GỌI HÀM GẮN SỰ KIỆN SAU KHI RENDER ***
         attachAddToCartEvents();
       }
 

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chính sách bảo mật - Nhà Thuốc GB</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/style.css?v=1.10" />
+    <style>
+      .policy-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .policy-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .policy-content {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 60px;
+        line-height: 1.8;
+        color: #4a5568;
+      }
+      .policy-content h2 {
+        color: #2d3748;
+        font-size: 1.5rem;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-left: 4px solid #5a67d8;
+        padding-left: 15px;
+      }
+      .policy-content ul {
+        padding-left: 20px;
+        margin-bottom: 20px;
+      }
+      .policy-content li {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER ĐƯỢC CHÈN TỰ ĐỘNG TẠI ĐÂY -->
+    <div id="main-header"></div>
+
+    <main>
+      <section class="policy-hero">
+        <div class="container">
+          <h1>Chính sách bảo mật</h1>
+          <p>Cam kết bảo vệ thông tin cá nhân của khách hàng</p>
+        </div>
+      </section>
+
+      <div class="container">
+        <div class="policy-content">
+          <p>
+            Chào mừng bạn truy cập vào website Nhà Thuốc GB. Chúng tôi tôn trọng
+            và cam kết sẽ bảo mật những thông tin mang tính riêng tư của bạn.
+            Xin vui lòng đọc bản Chính sách bảo mật dưới đây để hiểu hơn những
+            cam kết mà chúng tôi thực hiện nhằm tôn trọng và bảo vệ quyền lợi
+            của người truy cập.
+          </p>
+
+          <h2>1. Mục đích thu thập thông tin</h2>
+          <p>
+            Các thông tin thu thập thông tin khách hàng được sử dụng cho mục
+            đích:
+          </p>
+          <ul>
+            <li>Xử lý đơn hàng và giao hàng đến địa chỉ của bạn.</li>
+            <li>Thông báo về việc giao hàng và hỗ trợ khách hàng.</li>
+            <li>Cung cấp thông tin liên quan đến sản phẩm.</li>
+            <li>
+              Xử lý các yêu cầu cụ thể của bạn và quản lý tài khoản khách hàng.
+            </li>
+          </ul>
+
+          <h2>2. Phạm vi thu thập thông tin</h2>
+          <p>
+            Chúng tôi thu thập các thông tin sau khi bạn tạo tài khoản hoặc đặt
+            hàng:
+          </p>
+          <ul>
+            <li>Họ tên, Địa chỉ giao hàng, Số điện thoại, Email.</li>
+            <li>
+              Thông tin thanh toán (được bảo mật tuyệt đối qua cổng thanh toán).
+            </li>
+          </ul>
+
+          <h2>3. Thời gian lưu trữ thông tin</h2>
+          <p>
+            Dữ liệu cá nhân của khách hàng sẽ được lưu trữ cho đến khi có yêu
+            cầu hủy bỏ hoặc tự khách hàng đăng nhập và thực hiện hủy bỏ. Còn lại
+            trong mọi trường hợp thông tin cá nhân sẽ được bảo mật trên máy chủ
+            của Nhà Thuốc GB.
+          </p>
+
+          <h2>4. Cam kết bảo mật</h2>
+          <p>
+            Thông tin cá nhân của thành viên trên Nhà Thuốc GB được cam kết bảo
+            mật tuyệt đối theo chính sách bảo vệ thông tin cá nhân của chúng
+            tôi. Việc thu thập và sử dụng thông tin của mỗi thành viên chỉ được
+            thực hiện khi có sự đồng ý của khách hàng đó trừ những trường hợp
+            pháp luật có quy định khác.
+          </p>
+
+          <p><i>Lần cập nhật cuối: 20/11/2025</i></p>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER ĐƯỢC CHÈN TỰ ĐỘNG TẠI ĐÂY -->
+    <div id="main-footer"></div>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Script này sẽ tự động lấy file header.html và footer.html để chèn vào 2 div trên
+        await Promise.all([
+          loadComponent("components/header.html", "main-header"),
+          loadComponent("components/footer.html", "main-footer"),
+        ]);
+        await checkAuthStatus();
+        await loadCategoriesDropdown();
+      });
+    </script>
+  </body>
+</html>

@@ -433,3 +433,48 @@ function initPostDetailPage() {
   console.log("Trang chi tiết bài viết (initPostDetailPage) đã được gọi.");
   // TODO: Code tải nội dung 1 bài viết...
 }
+
+// ========== HÀM XỬ LÝ TÌM KIẾM CHO TRANG CHỦ ==========
+
+// ========== HÀM XỬ LÝ TÌM KIẾM CHO TRANG PRODUCTS ==========
+function attachProductSearchEvents() {
+  const searchInput = document.getElementById("product-search-input");
+  const searchButton = document.getElementById("product-search-button");
+
+  if (!searchInput || !searchButton) {
+    console.warn("Product search elements not found");
+    return;
+  }
+
+  // Điền sẵn từ khóa nếu có trong URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchKeyword = urlParams.get("search");
+  if (searchKeyword) {
+    searchInput.value = decodeURIComponent(searchKeyword);
+  }
+
+  // Xử lý click nút
+  searchButton.addEventListener("click", handleProductSearch);
+
+  // Xử lý nhấn Enter
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleProductSearch();
+    }
+  });
+}
+
+function handleProductSearch() {
+  const searchInput = document.getElementById("product-search-input");
+  const keyword = searchInput.value.trim();
+
+  if (!keyword) {
+    // Nếu xóa từ khóa, hiển thị lại tất cả sản phẩm
+    window.location.href = "products.html";
+    return;
+  }
+
+  // Reload trang với query string mới
+  window.location.href = `products.html?search=${encodeURIComponent(keyword)}`;
+}

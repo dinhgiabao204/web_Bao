@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Điều khoản sử dụng - Nhà Thuốc GB</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/style.css?v=1.10" />
+    <style>
+      .policy-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .policy-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .policy-content {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 60px;
+        line-height: 1.8;
+        color: #4a5568;
+      }
+      .policy-content h2 {
+        color: #2d3748;
+        font-size: 1.5rem;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-left: 4px solid #5a67d8;
+        padding-left: 15px;
+      }
+      .policy-content ul {
+        padding-left: 20px;
+        margin-bottom: 20px;
+      }
+      .policy-content li {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER ĐƯỢC CHÈN TỰ ĐỘNG -->
+    <div id="main-header"></div>
+
+    <main>
+      <section class="policy-hero">
+        <div class="container">
+          <h1>Điều khoản sử dụng</h1>
+          <p>Quy định và trách nhiệm khi sử dụng dịch vụ</p>
+        </div>
+      </section>
+      <div class="container">
+        <div class="policy-content">
+          <h2>1. Giới thiệu</h2>
+          <p>
+            Chào mừng quý khách hàng đến với website Nhà Thuốc GB. Khi quý khách
+            truy cập vào trang web của chúng tôi có nghĩa là quý khách đồng ý
+            với các điều khoản này. Trang web có quyền thay đổi, chỉnh sửa, thêm
+            hoặc lược bỏ bất kỳ phần nào trong Điều khoản mua bán hàng hóa này,
+            vào bất cứ lúc nào.
+          </p>
+
+          <h2>2. Hướng dẫn sử dụng website</h2>
+          <ul>
+            <li>
+              Khách hàng đảm bảo có đầy đủ hành vi dân sự để thực hiện các giao
+              dịch mua bán hàng hóa theo quy định hiện hành của pháp luật Việt
+              Nam.
+            </li>
+            <li>
+              Quý khách tự chịu trách nhiệm về bảo mật và lưu giữ mọi hoạt động
+              sử dụng dịch vụ dưới tên đăng ký, mật khẩu và hộp thư điện tử của
+              mình.
+            </li>
+          </ul>
+
+          <h2>3. Ý kiến khách hàng</h2>
+          <p>
+            Tất cả nội dung trang web và ý kiến phê bình của quý khách đều là
+            tài sản của chúng tôi. Nếu chúng tôi phát hiện bất kỳ thông tin giả
+            mạo nào, chúng tôi sẽ khóa tài khoản của quý khách ngay lập tức hoặc
+            áp dụng các biện pháp khác theo quy định của pháp luật Việt Nam.
+          </p>
+
+          <h2>4. Thương hiệu và bản quyền</h2>
+          <p>
+            Mọi quyền sở hữu trí tuệ (đã đăng ký hoặc chưa đăng ký), nội dung
+            thông tin và tất cả các thiết kế, văn bản, đồ họa, phần mềm, hình
+            ảnh, video, âm nhạc, âm thanh, biên dịch phần mềm, mã nguồn và phần
+            mềm cơ bản đều là tài sản của chúng tôi.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER ĐƯỢC CHÈN TỰ ĐỘNG -->
+    <div id="main-footer"></div>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        await Promise.all([
+          loadComponent("components/header.html", "main-header"),
+          loadComponent("components/footer.html", "main-footer"),
+        ]);
+        await checkAuthStatus();
+        await loadCategoriesDropdown();
+      });
+    </script>
+  </body>
+</html>

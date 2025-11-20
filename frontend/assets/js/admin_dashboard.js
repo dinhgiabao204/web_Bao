@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/nhathuocgb/api";
+const API_URL = "http://nhom50.itimit.id.vn/nhathuocgb/api";
 
 function vnd(n) {
   const x = typeof n === "number" ? n : parseFloat(n) || 0;

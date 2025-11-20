@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liên hệ - Nhà Thuốc GB</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/style.css?v=1.10" />
+    <style>
+      /* CSS RIÊNG CHO TRANG LIÊN HỆ (INLINE ĐỂ DỄ QUẢN LÝ) */
+
+      /* Hero Section */
+      .contact-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+        padding: 60px 20px;
+        margin-bottom: 40px;
+        border-radius: 0 0 20px 20px;
+      }
+
+      .contact-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .contact-hero p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      /* Layout Grid */
+      .contact-container {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr; /* Cột thông tin nhỏ hơn cột form */
+        gap: 40px;
+        margin-bottom: 60px;
+      }
+
+      @media (max-width: 768px) {
+        .contact-container {
+          grid-template-columns: 1fr; /* Mobile: Xếp chồng lên nhau */
+        }
+      }
+
+      /* Info Cards (Bên trái) */
+      .contact-info-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .info-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .info-icon {
+        width: 50px;
+        height: 50px;
+        background: #eef2ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #5a67d8;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .info-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        color: #2d3748;
+      }
+
+      .info-content p,
+      .info-content a {
+        color: #718096;
+        font-size: 0.95rem;
+        text-decoration: none;
+        margin: 0;
+      }
+
+      .info-content a:hover {
+        color: #5a67d8;
+      }
+
+      /* Contact Form (Bên phải) */
+      .contact-form-wrapper {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .contact-form-wrapper h2 {
+        margin-bottom: 25px;
+        color: #2d3748;
+        font-size: 1.8rem;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #4a5568;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        outline: none;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: #5a67d8;
+        box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+      }
+
+      .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+      }
+
+      .btn-submit:hover {
+        opacity: 0.9;
+      }
+
+      /* Map Section */
+      .map-section {
+        width: 100%;
+        height: 400px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 60px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header sẽ được load bởi app.js -->
+    <div id="main-header"></div>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="contact-hero">
+        <div class="container">
+          <h1>Liên hệ với chúng tôi</h1>
+          <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn 24/7</p>
+        </div>
+      </section>
+
+      <div class="container">
+        <div class="contact-container">
+          <!-- Cột trái: Thông tin liên hệ -->
+          <div class="contact-info-wrapper">
+            <!-- Hotline -->
+            <div class="info-card">
+              <div class="info-icon">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <div class="info-content">
+                <h3>Hotline tư vấn</h3>
+                <a href="tel:0909699699">0909.699.699</a>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="info-card">
+              <div class="info-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="info-content">
+                <h3>Email hỗ trợ</h3>
+                <a href="mailto:nhathuocgb@gmail.com">nhathuocgb@gmail.com</a>
+              </div>
+            </div>
+
+            <!-- Địa chỉ -->
+            <div class="info-card">
+              <div class="info-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="info-content">
+                <h3>Địa chỉ cửa hàng</h3>
+                <p>123 Đường Nguyễn Văn Cừ, Quận 5, TP. Hồ Chí Minh</p>
+              </div>
+            </div>
+
+            <!-- Giờ làm việc -->
+            <div class="info-card">
+              <div class="info-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="info-content">
+                <h3>Giờ làm việc</h3>
+                <p>Thứ 2 - Chủ Nhật: 8:00 - 22:00</p>
+              </div>
+            </div>
+
+            <!-- Mạng xã hội -->
+            <div class="info-card" style="justify-content: center; gap: 20px">
+              <a href="#" style="color: #3b5998; font-size: 1.5rem"
+                ><i class="fab fa-facebook"></i
+              ></a>
+              <a href="#" style="color: #c32aa3; font-size: 1.5rem"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" style="color: #0088cc; font-size: 1.5rem"
+                ><i class="fab fa-telegram"></i
+              ></a>
+              <a href="#" style="color: #ff0000; font-size: 1.5rem"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+
+          <!-- Cột phải: Form liên hệ -->
+          <div class="contact-form-wrapper">
+            <h2>Gửi tin nhắn cho chúng tôi</h2>
+            <form id="contact-form">
+              <div class="form-group">
+                <label for="fullname">Họ và tên</label>
+                <input
+                  type="text"
+                  id="fullname"
+                  placeholder="Nhập họ tên của bạn"
+                  required
+                />
+              </div>
+
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px"
+              >
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="email@example.com"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Số điện thoại</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    placeholder="09xxxxxxxx"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Chủ đề</label>
+                <input
+                  type="text"
+                  id="subject"
+                  placeholder="Bạn cần hỗ trợ vấn đề gì?"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="message">Nội dung</label>
+                <textarea
+                  id="message"
+                  rows="5"
+                  placeholder="Chi tiết nội dung..."
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Gửi tin nhắn
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bản đồ Google Map -->
+        <section class="map-section">
+          <!-- Iframe Google Maps Demo (Trỏ về HCM) -->
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.6696584237116!2d106.68027361462243!3d10.759922362437105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1b7c3ed289%3A0xa0665189479a0!2sHo%20Chi%20Minh%20City%2C%20Vietnam!5e0!3m2!1sen!2s!4v1629789234567!5m2!1sen!2s"
+            allowfullscreen=""
+            loading="lazy"
+          ></iframe>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer sẽ được load bởi app.js -->
+    <div id="main-footer"></div>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+      // Khởi tạo trang liên hệ
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Load header/footer và check auth từ app.js
+        await Promise.all([
+          loadComponent("components/header.html", "main-header"),
+          loadComponent("components/footer.html", "main-footer"),
+        ]);
+        await checkAuthStatus();
+        await loadCategoriesDropdown();
+
+        // Xử lý form liên hệ (Demo - Frontend only)
+        const contactForm = document.getElementById("contact-form");
+        if (contactForm) {
+          contactForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            // Ở đây bạn có thể gọi API gửi mail nếu backend hỗ trợ
+            alert(
+              "Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể."
+            );
+            contactForm.reset();
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

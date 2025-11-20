@@ -31,11 +31,11 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // === KẾT NỐI DB ===
-$DB_HOST = "127.0.0.1";
-$DB_PORT = "3307";
-$DB_NAME = "nhathuocgb";
-$DB_USER = "root";
-$DB_PASS = "";
+$DB_HOST = "localhost";
+$DB_PORT = "3306";
+$DB_NAME = "sql_nhom50_itimi";
+$DB_USER = "sql_nhom50_itimi";
+$DB_PASS = "03a894cb183488";
 $pdo = null;
 try {
     $pdo = new PDO("mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME;charset=utf8mb4", $DB_USER, $DB_PASS, [

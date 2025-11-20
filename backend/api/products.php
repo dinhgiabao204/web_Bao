@@ -1,5 +1,5 @@
 <?php
-// backend/api/products.php (Bản Hoàn Chỉnh - Đã Bổ Sung Admin CRUD)
+// backend/api/products.php (Bản Final - Đã sửa lỗi hiển thị ít sản phẩm & Thêm tìm kiếm)
 
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: http://localhost:8080"); 
@@ -42,11 +42,11 @@ function check_admin() {
 }
 
 // === KẾT NỐI DB ===
-$DB_HOST = "127.0.0.1";
-$DB_PORT = "3307";
-$DB_NAME = "nhathuocgb";
-$DB_USER = "root";
-$DB_PASS = "";
+$DB_HOST = "localhost";
+$DB_PORT = "3306";
+$DB_NAME = "sql_nhom50_itimi";
+$DB_USER = "sql_nhom50_itimi";
+$DB_PASS = "03a894cb183488";
 $pdo = null;
 try {
     $pdo = new PDO("mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME;charset=utf8mb4", $DB_USER, $DB_PASS, [
@@ -98,16 +98,35 @@ try {
 
         // --- PUBLIC: LẤY DANH SÁCH (cho khách) ---
         case 'list':
-            // ... (code case 'list' của bạn đã đúng, giữ nguyên) ...
-            $limit  = max(1, (int)($_GET['limit'] ?? 12));
+            // UPDATE QUAN TRỌNG: Mặc định lấy 1000 sản phẩm thay vì 12 để hiển thị hết
+            $limit_param = isset($_GET['limit']) ? (int)$_GET['limit'] : 1000; 
+            $limit  = max(1, $limit_param);
+            
             $offset = max(0, (int)($_GET['offset'] ?? 0));
             $featured = isset($_GET['featured']) && $_GET['featured'] == '1' ? 1 : null;
             $category_id = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
             
+            // UPDATE QUAN TRỌNG: Thêm xử lý tìm kiếm
+            $search = isset($_GET['search']) ? trim($_GET['search']) : null;
+            
             $where = ["p.status = 1"]; 
             $params = [];
-            if ($featured !== null) { $where[] = "p.featured = :featured"; $params[':featured'] = $featured; }
-            if ($category_id) { $where[] = "p.category_id = :cid"; $params[':cid'] = $category_id; }
+
+            if ($featured !== null) { 
+                $where[] = "p.featured = :featured"; 
+                $params[':featured'] = $featured; 
+            }
+            if ($category_id) { 
+                $where[] = "p.category_id = :cid"; 
+                $params[':cid'] = $category_id; 
+            }
+            
+            // Logic tìm kiếm SQL (LIKE)
+            if ($search) {
+                $where[] = "p.name LIKE :search";
+                $params[':search'] = "%$search%";
+            }
+
             $whereSql = "WHERE " . implode(" AND ", $where);
 
             $sql = "SELECT p.id, p.name, p.slug, p.price, p.sale_price, p.image, p.unit, c.name AS category_name
@@ -125,7 +144,6 @@ try {
 
         // --- PUBLIC: LẤY CHI TIẾT (cho khách) ---
         case 'detail':
-            // ... (code case 'detail' của bạn đã đúng, giữ nguyên) ...
             $product = null;
             $query = "SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.id WHERE p.status = 1 AND ";
             $params = [];

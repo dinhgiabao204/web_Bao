@@ -29,11 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // === DB connection ===
-$DB_HOST = "127.0.0.1";
-$DB_PORT = "3307"; // XAMPP MySQL port
-$DB_NAME = "nhathuocgb";
-$DB_USER = "root";
-$DB_PASS = "";
+$DB_HOST = "localhost";
+$DB_PORT = "3306";
+$DB_NAME = "sql_nhom50_itimi";
+$DB_USER = "sql_nhom50_itimi";
+$DB_PASS = "03a894cb183488";
 
 try {
     $pdo = new PDO(
